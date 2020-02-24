@@ -102,12 +102,13 @@ top2019 = ['The Dead Don’t Die',
           'The Irishman',
           'Marriage Story',
           'The Lighthouse',
-          'Mission: Impossible – Fallout'
-          'Ready Player One']
+          'Mission: Impossible – Fallout',
+          'Ready Player One',
+          'Joker']
 
 # the path were the files are going to be saved. 
 # Example: /home/ubuntu/moviefiles/
-mypath = ""
+mypath = "/home/ant/Documents/Tesis/wikipedia_movies/data/"
 
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
@@ -116,7 +117,7 @@ for i in top2019:
 	#First check if the movie is not in the folder
     if check_movie(movie_name=i,movie_list=onlyfiles):
     	#Download the data
-        data = get_movie(ia)
+        data = get_movie(titulo=i)
         #Save data as txt
         write_movie(table=data,movie_name=i,path=mypath)
     else: 
