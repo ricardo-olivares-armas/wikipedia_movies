@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 import time
@@ -8,9 +10,12 @@ import pandas as pd
 import re 
 import shutil
 import os
-from  builtins import any as b_any
+from builtins import any as b_any
 from os import listdir
 from os.path import isfile, join
+
+# The path should respond to the persistent volume from docker
+mypath = "/home/godzilla/data/wikipedia_movies/"
 
 
 
@@ -18,25 +23,24 @@ def get_movie(titulo):
     
     ''' Given a movie title goes to its wikipedia page
         and get the information from the table in the right '''
-    
-    timmer = randint(10,20)
+    timmer = randint(1,2)
     print('Inicia timer de...{} segundos'.format(timmer))
     time.sleep(timmer)
     
     url = 'https://en.wikipedia.org/wiki/Main_Page'
-    driver = webdriver.Chrome()
+    #driver = webdriver.Chrome()
+    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", DesiredCapabilities.FIREFOX)
     driver.get(url)
-    
-    time.sleep(10)
+    time.sleep(5)
     
     u = driver.find_element_by_name('search')
-    
-    time.sleep(2)
-    
-    u.send_keys(titulo)
+
     
     time.sleep(5)
 
+    u.send_keys(titulo)
+
+    time.sleep(5)
     suggestions = driver.find_elements_by_css_selector("div[class='suggestions-results']")
 
     movies = []
@@ -48,12 +52,14 @@ def get_movie(titulo):
     for i in movies_list:
         if (i.find("film") != -1):
             break
-            
+    print(1)
     i = i.replace(" (soundtrack)","")
+    print(2)
     driver.find_element_by_xpath('//*[@title="{}"]'.format(i)).click()
+    print(3)
 
     time.sleep(10)
-    
+
     table = driver.find_element_by_xpath(("//table[@class='infobox vevent']"))
     data = table.text
     
@@ -92,23 +98,23 @@ def check_movie(movie_name,movie_list):
     else:
         return False
 
-top2019 = ['The Dead Don’t Die',
-          'Ad Astra',
-          'Cindy la Regia',
-          'Ford v Ferrari',
-          'Once Upon a Time in…Hollywood',
-          'Parasite',
-          'Little Women',
-          'The Irishman',
-          'Marriage Story',
-          'The Lighthouse',
-          'Mission: Impossible – Fallout',
-          'Ready Player One',
-          'Joker']
+top2019 = [#'The Dead Don’t Die',
+          # 'Ad Astra',
+          # 'Cindy la Regia',
+          # 'Ford v Ferrari',
+          'Once Upon a Time in…Hollywood'
+          # 'Parasite',
+          # 'Little Women',
+          # 'The Irishman',
+          # 'Marriage Story',
+          # 'The Lighthouse',
+          # 'Mission: Impossible – Fallout',
+          # 'Ready Player One',
+          # 'Joker'
+           ]
 
 # the path were the files are going to be saved. 
 # Example: /home/ubuntu/moviefiles/
-mypath = "/home/ant/Documents/Tesis/wikipedia_movies/data/"
 
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
