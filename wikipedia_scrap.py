@@ -15,7 +15,7 @@ from os import listdir
 from os.path import isfile, join
 
 # The path should respond to the persistent volume from docker
-mypath = "/home/godzilla/data/wikipedia_movies/"
+mypath = "/home/ant/Documents/Orax/wikipedia_movies/data/"
 
 
 
@@ -28,8 +28,8 @@ def get_movie(titulo):
     time.sleep(timmer)
     
     url = 'https://en.wikipedia.org/wiki/Main_Page'
-    #driver = webdriver.Chrome()
-    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", DesiredCapabilities.FIREFOX)
+    driver = webdriver.Chrome()
+    #driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", DesiredCapabilities.FIREFOX)
     driver.get(url)
     time.sleep(5)
     
@@ -50,10 +50,16 @@ def get_movie(titulo):
     movies_list = movies[0].split("\n")
 
     for i in movies_list:
+        print(i)
         if (i.find("film") != -1):
+            print("ojo aquí: ",i)
+            break
+        #    break
+        elif (i == titulo):
+            i = i.replace(" (soundtrack)", "")
+            i = i.replace(" (novel)", "")
             break
     print(1)
-    i = i.replace(" (soundtrack)","")
     print(2)
     driver.find_element_by_xpath('//*[@title="{}"]'.format(i)).click()
     print(3)
@@ -82,10 +88,10 @@ def clean_movie_name(movie_name):
     
     ''' Given a movie title, removes special characters '''
     
-    movie_name = movie_name.replace(" ","")
-    movie_name = movie_name.replace("’","")
-    movie_name = movie_name.replace("…","")
-    movie_name = movie_name.replace(".","")
+    movie_name = movie_name.replace(" ", "")
+    movie_name = movie_name.replace("’", "")
+    movie_name = movie_name.replace("…", "")
+    movie_name = movie_name.replace(".", "")
     return movie_name
 
 
@@ -98,20 +104,8 @@ def check_movie(movie_name,movie_list):
     else:
         return False
 
-top2019 = [#'The Dead Don’t Die',
-          # 'Ad Astra',
-          # 'Cindy la Regia',
-          # 'Ford v Ferrari',
-          'Once Upon a Time in…Hollywood'
-          # 'Parasite',
-          # 'Little Women',
-          # 'The Irishman',
-          # 'Marriage Story',
-          # 'The Lighthouse',
-          # 'Mission: Impossible – Fallout',
-          # 'Ready Player One',
-          # 'Joker'
-           ]
+top2019 = ['Cindy la Regia']
+
 
 # the path were the files are going to be saved. 
 # Example: /home/ubuntu/moviefiles/
